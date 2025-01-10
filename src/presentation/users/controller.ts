@@ -19,8 +19,10 @@ export class UsersController {
 	};
 
 	getAUser = async (req: Request, res: Response) => {
+		const { id } = req.params;
+
 		this.usersService
-			.getAUser()
+			.getAUser(id)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
@@ -34,7 +36,7 @@ export class UsersController {
 
 	createAUser = async (req: Request, res: Response) => {
 		this.usersService
-			.createAUser()
+			.createAUser(req.body)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
@@ -47,8 +49,10 @@ export class UsersController {
 	};
 
 	editUser = async (req: Request, res: Response) => {
+		const { id } = req.params;
+
 		this.usersService
-			.editUser()
+			.editUser(id, req.body)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
@@ -61,8 +65,10 @@ export class UsersController {
 	};
 
 	disabledUser = async (req: Request, res: Response) => {
+		const { id } = req.params;
+
 		this.usersService
-			.disabledUser()
+			.disabledUser(id)
 			.then((data) => {
 				return res.status(201).json(data);
 			})

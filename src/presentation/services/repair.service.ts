@@ -1,33 +1,67 @@
+import { Repairs } from '../../data';
+
 export class RepairService {
 	constructor() {}
 
 	async findAllPendings() {
-		return {
-			message: 'Obtener el listado de todos los pendientes',
-		};
+		try {
+			return await Repairs.find({
+				where: {
+					status: true,
+				},
+			});
+		} catch (error) {
+			throw new Error('Error getting all repairs');
+		}
 	}
 
-	async findAPending() {
-		return {
-			message: 'Obtener una moto especifica a reparar',
-		};
+	async findAPending(id: string) {
+		const findPending = await Repairs.findOne({
+			where: {
+				id,
+				status: true,
+			},
+		});
+
+		if (!findPending) {
+			throw new Error('Repair not found');
+		}
+		return findPending;
 	}
 
-	async createADate() {
-		return {
-			message: 'Agendar cita y quien solicita reparacion',
-		};
+	async createADate(createDate: any) {
+		const createAppointment = new Repairs();
+
+		createAppointment.date = createDate.date;
+
+		try {
+			return await createAppointment.save();
+		} catch (error) {
+			throw new Error('Error creating appointment');
+		}
 	}
 
-	async completedRepair() {
-		return {
-			message: 'Ha sido completada la reparacion',
-		};
+	async completedRepair(id: string, updateStatus: any) {
+		const statusUpdated = await this.findAPending(id);
+
+		statusUpdated.status = updateStatus.status.toLowerCase().trim();
+
+		try {
+			return await statusUpdated.save();
+		} catch (error) {
+			throw new Error('Error updating status');
+		}
 	}
 
-	async cancelledRepair() {
-		return {
-			message: 'Se ha cancelado la repacion, CANCELADO',
-		};
+	async cancelledRepair(id: string) {
+		const deletedRepair = await this.findAPending(id);
+
+		deletedRepair.status = false;
+
+		try {
+			deletedRepair.save();
+		} catch (error) {
+			throw new Error('Error deleting repair');
+		}
 	}
 }

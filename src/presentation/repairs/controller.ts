@@ -19,8 +19,10 @@ export class RepairController {
 	};
 
 	findAPending = async (req: Request, res: Response) => {
+		const { id } = req.params;
+
 		this.repairService
-			.findAPending()
+			.findAPending(id)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
@@ -34,7 +36,7 @@ export class RepairController {
 
 	createADate = async (req: Request, res: Response) => {
 		this.repairService
-			.createADate()
+			.createADate(req.body)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
@@ -47,8 +49,10 @@ export class RepairController {
 	};
 
 	completedRepair = async (req: Request, res: Response) => {
+		const { id } = req.params;
+
 		this.repairService
-			.completedRepair()
+			.completedRepair(id, req.body)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
@@ -61,8 +65,10 @@ export class RepairController {
 	};
 
 	cancelledRepair = async (req: Request, res: Response) => {
+		const { id } = req.params;
+
 		this.repairService
-			.cancelledRepair()
+			.cancelledRepair(id)
 			.then((data) => {
 				return res.status(201).json(data);
 			})

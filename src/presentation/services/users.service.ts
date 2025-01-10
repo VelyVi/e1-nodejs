@@ -1,33 +1,72 @@
+import { Users } from '../../data';
+
 export class UsersService {
 	constructor() {}
 
 	async getAllUsers() {
-		return {
-			message: 'Obteniendo el listado de todos los usuarios en la database',
-		};
+		try {
+			return await Users.find({
+				where: {
+					status: true,
+				},
+			});
+		} catch (error) {
+			throw new Error('Error obteniendo Posts');
+		}
 	}
 
-	async getAUser() {
-		return {
-			message: 'Obteniendo un usuario especifico en la database',
-		};
+	async getAUser(id: string) {
+		const getUser = await Users.findOne({
+			where: {
+				id,
+				status: true,
+			},
+		});
+
+		if (!getUser) {
+			throw new Error('Account not found');
+		}
+
+		return getUser;
 	}
 
-	async createAUser() {
-		return {
-			message: 'Crear una cuenta puede ser empleado o cliente',
-		};
+	async createAUser(createData: any) {
+		const createUser = new Users();
+
+		createUser.name = createData.name;
+		createUser.email = createData.email;
+		createUser.password = createData.password;
+		createUser.role = createData.role;
+
+		try {
+			return await createUser.save();
+		} catch (error) {
+			throw new Error('Error creating user');
+		}
 	}
 
-	async editUser() {
-		return {
-			message: 'Cambiar ya sea email o name de usuario',
-		};
+	async editUser(id: string, editData: any) {
+		const editUser = await this.getAUser(id);
+
+		editUser.name = editData.name.toLowerCase().trim();
+		editUser.password = editData.password.trim();
+
+		try {
+			return await editUser.save();
+		} catch (error) {
+			throw new Error('Error updating user');
+		}
 	}
 
-	async disabledUser() {
-		return {
-			message: 'Cambiar el user a disabled',
-		};
+	async disabledUser(id: string) {
+		const deletedUser = await this.getAUser(id);
+
+		deletedUser.status = false;
+
+		try {
+			deletedUser.save();
+		} catch (error) {
+			throw new Error('Error deleting user');
+		}
 	}
 }
