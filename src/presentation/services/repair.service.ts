@@ -33,6 +33,7 @@ export class RepairService {
 		const createAppointment = new Repairs();
 
 		createAppointment.date = createDate.date;
+		//createAppointment.status=createDate.status
 
 		try {
 			return await createAppointment.save();
@@ -44,7 +45,7 @@ export class RepairService {
 	async completedRepair(id: string, updateStatus: any) {
 		const statusUpdated = await this.findAPending(id);
 
-		statusUpdated.status = updateStatus.status.toLowerCase().trim();
+		statusUpdated.status = 'completed';
 
 		try {
 			return await statusUpdated.save();
