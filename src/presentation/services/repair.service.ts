@@ -7,7 +7,7 @@ export class RepairService {
 		try {
 			return await Repairs.find({
 				where: {
-					status: true,
+					status: 'pending',
 				},
 			});
 		} catch (error) {
@@ -19,7 +19,7 @@ export class RepairService {
 		const findPending = await Repairs.findOne({
 			where: {
 				id,
-				status: true,
+				status: 'pending',
 			},
 		});
 
@@ -56,7 +56,7 @@ export class RepairService {
 	async cancelledRepair(id: string) {
 		const deletedRepair = await this.findAPending(id);
 
-		deletedRepair.status = false;
+		deletedRepair.status = 'cancelled';
 
 		try {
 			deletedRepair.save();

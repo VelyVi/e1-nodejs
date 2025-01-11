@@ -11,7 +11,7 @@ export class UsersService {
 				},
 			});
 		} catch (error) {
-			throw new Error('Error obteniendo Posts');
+			throw new Error('Error getting all users');
 		}
 	}
 

@@ -10,10 +10,11 @@ export class Repairs extends BaseEntity {
 	})
 	date: Date;
 
-	@Column('bool', {
-		default: true,
+	@Column('varchar', {
+		length: 15,
+		nullable: false,
 	})
-	status: boolean;
+	status: string;
 
 	// @PrimaryGeneratedColumn('uuid')
 	// userId: string
