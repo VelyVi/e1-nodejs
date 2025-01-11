@@ -33,7 +33,7 @@ export class UsersService {
 	async createAUser(createData: any) {
 		const createUser = new Users();
 
-		createUser.name = createData.name;
+		createUser.name = createData.name.toLowerCase().trim();
 		createUser.email = createData.email;
 		createUser.password = createData.password;
 		createUser.role = createData.role;
