@@ -60,7 +60,7 @@ export class RepairService {
 		deletedRepair.status = 'cancelled';
 
 		try {
-			deletedRepair.save();
+			return await deletedRepair.save();
 		} catch (error) {
 			throw new Error('Error deleting repair');
 		}
