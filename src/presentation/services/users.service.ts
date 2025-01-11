@@ -7,7 +7,7 @@ export class UsersService {
 		try {
 			return await Users.find({
 				where: {
-					status: true,
+					status: 'available',
 				},
 			});
 		} catch (error) {
@@ -19,7 +19,7 @@ export class UsersService {
 		const getUser = await Users.findOne({
 			where: {
 				id,
-				status: true,
+				status: 'available',
 			},
 		});
 
@@ -61,7 +61,7 @@ export class UsersService {
 	async disabledUser(id: string) {
 		const deletedUser = await this.getAUser(id);
 
-		deletedUser.status = false;
+		deletedUser.status = 'disabled';
 
 		try {
 			deletedUser.save();

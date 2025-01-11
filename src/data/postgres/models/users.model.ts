@@ -30,8 +30,9 @@ export class Users extends BaseEntity {
 	})
 	role: string;
 
-	@Column('bool', {
-		default: true,
+	@Column('varchar', {
+		length: 15,
+		default: 'available',
 	})
-	status: boolean;
+	status: string;
 }
