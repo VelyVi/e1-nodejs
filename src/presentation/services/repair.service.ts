@@ -42,7 +42,7 @@ export class RepairService {
 		}
 	}
 
-	async completedRepair(id: string, updateStatus: any) {
+	async completedRepair(id: string) {
 		const statusUpdated = await this.findAPending(id);
 
 		statusUpdated.status = 'completed';

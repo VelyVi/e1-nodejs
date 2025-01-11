@@ -52,7 +52,7 @@ export class RepairController {
 		const { id } = req.params;
 
 		this.repairService
-			.completedRepair(id, req.body)
+			.completedRepair(id)
 			.then((data) => {
 				return res.status(201).json(data);
 			})
