@@ -1,82 +1,76 @@
 import { Request, Response } from 'express';
 import { RepairService } from '../services/repair.service';
+import { CompletedRepairDTO, CreateRepairDTO, CustomError } from '../../domain';
 
 export class RepairController {
 	constructor(private readonly repairService: RepairService) {}
 
-	findAllPendings = async (req: Request, res: Response) => {
-		this.repairService
-			.findAllPendings()
-			.then((data) => {
-				return res.status(201).json(data);
-			})
-			.catch((error) => {
-				return res.status(500).json({
-					message: 'Internal Server Error',
-					error,
-				});
+	private handleError = (error: unknown, res: Response) => {
+		if (error instanceof CustomError) {
+			return res.status(error.statusCode).json({
+				message: error.message,
 			});
+		}
+		console.log(error);
+		return res.status(500).json({ message: 'Ups, something went wrong...' });
 	};
 
-	findAPending = async (req: Request, res: Response) => {
+	findAllPendings = (req: Request, res: Response) => {
+		this.repairService
+			.findAllPendings()
+			.then((data: any) => {
+				return res.status(200).json(data);
+			})
+			.catch((error: unknown) => this.handleError(error, res));
+	};
+
+	findAPending = (req: Request, res: Response) => {
 		const { id } = req.params;
 
 		this.repairService
 			.findAPending(id)
-			.then((data) => {
-				return res.status(201).json(data);
+			.then((data: any) => {
+				return res.status(200).json(data);
 			})
-			.catch((error) => {
-				return res.status(500).json({
-					message: 'Internal Server Error',
-					error,
-				});
-			});
+			.catch((error: unknown) => this.handleError(error, res));
 	};
 
-	createADate = async (req: Request, res: Response) => {
+	createADate = (req: Request, res: Response) => {
+		const [error, createADateDto] = CreateRepairDTO.createR(req.body);
+
+		if (error) return res.status(422).json({ message: error });
+
 		this.repairService
-			.createADate(req.body)
-			.then((data) => {
+			.createADate(createADateDto!)
+			.then((data: any) => {
 				return res.status(201).json(data);
 			})
-			.catch((error) => {
-				return res.status(500).json({
-					message: 'Internal Server Error',
-					error,
-				});
-			});
+			.catch((error: unknown) => this.handleError(error, res));
 	};
 
-	completedRepair = async (req: Request, res: Response) => {
+	completedRepair = (req: Request, res: Response) => {
 		const { id } = req.params;
 
+		const [error, completedRepDto] = CompletedRepairDTO.CompletedR(req.body);
+
+		if (error) return res.status(422).json({ message: error });
+
 		this.repairService
-			.completedRepair(id)
-			.then((data) => {
+			.completedRepair(id, completedRepDto!)
+			.then((data: any) => {
 				return res.status(201).json(data);
 			})
-			.catch((error) => {
-				return res.status(500).json({
-					message: 'Internal Server Error',
-					error,
-				});
-			});
+			.catch((error: unknown) => this.handleError(error, res));
 	};
 
-	cancelledRepair = async (req: Request, res: Response) => {
+	cancelledRepair = (req: Request, res: Response) => {
 		const { id } = req.params;
 
 		this.repairService
 			.cancelledRepair(id)
 			.then((data) => {
-				return res.status(201).json(data);
+				return res.status(200).json(null);
 			})
-			.catch((error) => {
-				return res.status(500).json({
-					message: 'Internal Server Error',
-					error,
-				});
-			});
+			.catch((error: unknown) => this.handleError(error, res));
 	};
 }

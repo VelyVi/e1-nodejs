@@ -12,6 +12,8 @@ export class UsersRoutes {
 		router.get('/', usersController.getAllUsers);
 		router.get('/:id', usersController.getAUser);
 		router.post('/', usersController.createAUser);
+		router.post('/login', usersController.login);
+		router.post('/register', usersController.register);
 		router.patch('/:id', usersController.editUser);
 		router.delete('/:id', usersController.disabledUser);
 

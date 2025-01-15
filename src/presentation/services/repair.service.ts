@@ -1,4 +1,5 @@
 import { Repairs } from '../../data';
+import { CompletedRepairDTO, CreateRepairDTO, CustomError } from '../../domain';
 
 export class RepairService {
 	constructor() {}
@@ -11,7 +12,7 @@ export class RepairService {
 				},
 			});
 		} catch (error) {
-			throw new Error('Error getting all repairs');
+			throw CustomError.internalServer('Error fetching data.');
 		}
 	}
 
@@ -24,12 +25,12 @@ export class RepairService {
 		});
 
 		if (!findPending) {
-			throw new Error('Repair not found');
+			throw CustomError.internalServer('Error fetching data.');
 		}
 		return findPending;
 	}
 
-	async createADate(createDate: any) {
+	async createADate(createDate: CreateRepairDTO) {
 		const createAppointment = new Repairs();
 
 		createAppointment.date = createDate.date;
@@ -38,19 +39,19 @@ export class RepairService {
 		try {
 			return await createAppointment.save();
 		} catch (error) {
-			throw new Error('Error creating appointment');
+			throw CustomError.internalServer('Error creating appointment.');
 		}
 	}
 
-	async completedRepair(id: string) {
+	async completedRepair(id: string, complData: CompletedRepairDTO) {
 		const statusUpdated = await this.findAPending(id);
 
-		statusUpdated.status = 'completed';
+		statusUpdated.status = complData.status.trim();
 
 		try {
 			return await statusUpdated.save();
 		} catch (error) {
-			throw new Error('Error updating status');
+			throw CustomError.internalServer('Error updating data.');
 		}
 	}
 
@@ -62,7 +63,7 @@ export class RepairService {
 		try {
 			return await deletedRepair.save();
 		} catch (error) {
-			throw new Error('Error deleting repair');
+			throw CustomError.internalServer('Error deleting data.');
 		}
 	}
 }

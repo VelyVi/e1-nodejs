@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+	BaseEntity,
+	BeforeInsert,
+	Column,
+	Entity,
+	PrimaryGeneratedColumn,
+} from 'typeorm';
+import { encriptAdapter } from '../../../config';
 
 @Entity()
 export class Users extends BaseEntity {
@@ -35,4 +42,9 @@ export class Users extends BaseEntity {
 		default: 'available',
 	})
 	status: string;
+
+	@BeforeInsert()
+	encryptedPassword() {
+		this.password = encriptAdapter.hash(this.password);
+	}
 }
