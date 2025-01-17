@@ -70,7 +70,7 @@ export class UsersController {
 		this.usersService
 			.disabledUser(id)
 			.then((data: any) => {
-				return res.status(200).json(data);
+				return res.status(204).json(data);
 			})
 			.catch((error: unknown) => this.handleError(error, res));
 	};

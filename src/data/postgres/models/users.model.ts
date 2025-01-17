@@ -7,6 +7,16 @@ import {
 } from 'typeorm';
 import { encriptAdapter } from '../../../config';
 
+export enum Status {
+	AVAILABLE = 'AVAILABLE',
+	DISABLED = 'DISABLED',
+}
+
+export enum Role {
+	EMPLOYEE = 'EMPLOYEE',
+	CLIENT = 'CLIENT',
+}
+
 @Entity()
 export class Users extends BaseEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -31,17 +41,17 @@ export class Users extends BaseEntity {
 	})
 	password: string;
 
-	@Column('varchar', {
-		length: 80,
-		nullable: false,
+	@Column('enum', {
+		enum: Role,
+		default: Role.CLIENT,
 	})
-	role: string;
+	role: Role;
 
-	@Column('varchar', {
-		length: 15,
-		default: 'available',
+	@Column('enum', {
+		enum: Status,
+		default: Status.AVAILABLE,
 	})
-	status: string;
+	status: Status;
 
 	@BeforeInsert()
 	encryptedPassword() {

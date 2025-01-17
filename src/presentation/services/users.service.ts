@@ -1,5 +1,5 @@
 import { encriptAdapter, JwtAdapter } from '../../config';
-import { Users } from '../../data';
+import { Role, Status, Users } from '../../data';
 import { CreateUserDTO, CustomError, EditUserDTO } from '../../domain';
 import { LoginUserDTO } from '../../domain/dtos/users/login.user.dto';
 import { RegisterDTO } from '../../domain/dtos/users/register.user.dto';
@@ -11,7 +11,7 @@ export class UsersService {
 		try {
 			return await Users.find({
 				where: {
-					status: 'available',
+					status: Status.AVAILABLE,
 				},
 			});
 		} catch (error) {
@@ -23,7 +23,7 @@ export class UsersService {
 		const getUser = await Users.findOne({
 			where: {
 				id,
-				status: 'available',
+				status: Status.AVAILABLE,
 			},
 		});
 
@@ -38,7 +38,7 @@ export class UsersService {
 		const user = await Users.findOne({
 			where: {
 				email: email,
-				status: 'available',
+				status: Status.AVAILABLE,
 			},
 		});
 		if (!user)
@@ -49,7 +49,7 @@ export class UsersService {
 	async createAUser(createData: CreateUserDTO) {
 		const createUser = new Users();
 
-		createUser.name = createData.name.toLowerCase().trim();
+		createUser.name = createData.name.trim();
 		createUser.email = createData.email;
 		createUser.password = createData.password;
 		createUser.role = createData.role;
@@ -64,7 +64,7 @@ export class UsersService {
 	async editUser(id: string, editData: EditUserDTO) {
 		const editUser = await this.getAUser(id);
 
-		editUser.name = editData.name.toLowerCase().trim();
+		editUser.name = editData.name.trim();
 		editUser.password = editData.password.trim();
 
 		try {
@@ -77,12 +77,13 @@ export class UsersService {
 	async disabledUser(id: string) {
 		const deletedUser = await this.getAUser(id);
 
-		deletedUser.status = 'disabled';
+		deletedUser.status = Status.DISABLED;
 
 		try {
-			deletedUser.save();
+			await deletedUser.save();
+			return { ok: true };
 		} catch (error) {
-			throw CustomError.internalServer('Error deleting data.');
+			throw CustomError.internalServer('Error disabling user');
 		}
 	}
 

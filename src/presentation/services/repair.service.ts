@@ -1,4 +1,4 @@
-import { Repairs } from '../../data';
+import { Repairs, RepairStatus } from '../../data';
 import { CompletedRepairDTO, CreateRepairDTO, CustomError } from '../../domain';
 
 export class RepairService {
@@ -8,7 +8,7 @@ export class RepairService {
 		try {
 			return await Repairs.find({
 				where: {
-					status: 'pending',
+					status: RepairStatus.PENDING,
 				},
 			});
 		} catch (error) {
@@ -20,7 +20,7 @@ export class RepairService {
 		const findPending = await Repairs.findOne({
 			where: {
 				id,
-				status: 'pending',
+				status: RepairStatus.PENDING,
 			},
 		});
 
@@ -46,7 +46,7 @@ export class RepairService {
 	async completedRepair(id: string, complData: CompletedRepairDTO) {
 		const statusUpdated = await this.findAPending(id);
 
-		statusUpdated.status = complData.status.trim();
+		statusUpdated.status = RepairStatus.COMPLETED;
 
 		try {
 			return await statusUpdated.save();
@@ -58,7 +58,7 @@ export class RepairService {
 	async cancelledRepair(id: string) {
 		const deletedRepair = await this.findAPending(id);
 
-		deletedRepair.status = 'cancelled';
+		deletedRepair.status = RepairStatus.CANCELLED;
 
 		try {
 			return await deletedRepair.save();

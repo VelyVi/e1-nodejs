@@ -69,7 +69,7 @@ export class RepairController {
 		this.repairService
 			.cancelledRepair(id)
 			.then((data) => {
-				return res.status(200).json(null);
+				return res.status(204).json(null);
 			})
 			.catch((error: unknown) => this.handleError(error, res));
 	};
