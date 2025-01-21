@@ -16,6 +16,16 @@ export class Repairs extends BaseEntity {
 	})
 	date: Date;
 
+	@Column('varchar', {
+		nullable: false,
+	})
+	motorsNumber: string;
+
+	@Column('varchar', {
+		nullable: false,
+	})
+	description: string;
+
 	@Column('enum', {
 		enum: RepairStatus,
 		default: RepairStatus.PENDING,
@@ -23,7 +33,7 @@ export class Repairs extends BaseEntity {
 	status: RepairStatus;
 
 	@Column('varchar', {
-		nullable: false,
+		nullable: true,
 	})
 	userId: string;
 }

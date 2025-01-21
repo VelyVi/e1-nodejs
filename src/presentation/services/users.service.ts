@@ -55,7 +55,13 @@ export class UsersService {
 		createUser.role = createData.role;
 
 		try {
-			return await createUser.save();
+			const newUser = await createUser.save();
+			return {
+				id: newUser.id,
+				name: newUser.name,
+				email: newUser.email,
+				role: newUser.role,
+			};
 		} catch (error) {
 			throw CustomError.internalServer('Error creating user.');
 		}
@@ -97,7 +103,7 @@ export class UsersService {
 		if (!isMatching) throw CustomError.unAuthorized('Invalid credentials');
 
 		const token = await JwtAdapter.generateToken({ id: user.id });
-		if (!token) throw CustomError.internalServer('Error while creating JWT');
+		if (!token) throw CustomError.internalServer('Error generating token');
 
 		return {
 			token: token,

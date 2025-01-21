@@ -25,9 +25,6 @@ export class CreateUserDTO {
 				'Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one special character.',
 			];
 
-		if (!role)
-			return ['Invalid role. Valid roles are either "employee" or "client".'];
-
 		return [undefined, new CreateUserDTO(name, email, password, role)];
 	}
 }
