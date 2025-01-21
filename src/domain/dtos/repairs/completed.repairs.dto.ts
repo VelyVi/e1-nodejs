@@ -1,5 +1,7 @@
+import { RepairStatus } from '../../../data';
+
 export class CompletedRepairDTO {
-	constructor(public readonly status: string) {}
+	constructor(public readonly status: RepairStatus.COMPLETED) {}
 
 	static CompletedR(object: {
 		[key: string]: any;

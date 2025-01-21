@@ -34,6 +34,8 @@ export class RepairService {
 		const createAppointment = new Repairs();
 
 		createAppointment.date = createDate.date;
+		createAppointment.motorsNumber = createDate.motorsNumber;
+		createAppointment.description = createDate.description;
 		//createAppointment.status=createDate.status
 
 		try {
@@ -46,7 +48,7 @@ export class RepairService {
 	async completedRepair(id: string, complData: CompletedRepairDTO) {
 		const statusUpdated = await this.findAPending(id);
 
-		statusUpdated.status = RepairStatus.COMPLETED;
+		statusUpdated.status = complData.status;
 
 		try {
 			return await statusUpdated.save();
