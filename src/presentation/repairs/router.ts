@@ -12,8 +12,8 @@ export class RepairRoutes {
 		const repairController = new RepairController(repairService);
 
 		//Protegemos aquí para que solo alguien loggeado lo pueda ver
-		router.post('/', repairController.createADate);
 		router.use(AuthMiddleware.protect);
+		router.post('/', repairController.createADate);
 
 		//Agregamos la capa de restricción para que solo alguien con rol EMPLOYEE pueda hacer y deshacer
 

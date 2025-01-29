@@ -37,11 +37,12 @@ export class RepairController {
 
 	createADate = (req: Request, res: Response) => {
 		const [error, createADateDto] = CreateRepairDTO.createR(req.body);
+		const userId = req.body.sessionUser;
 
 		if (error) return res.status(422).json({ message: error });
 
 		this.repairService
-			.createADate(createADateDto!)
+			.createADate(createADateDto!, userId)
 			.then((data: any) => {
 				return res.status(201).json(data);
 			})
@@ -50,24 +51,22 @@ export class RepairController {
 
 	completedRepair = (req: Request, res: Response) => {
 		const { id } = req.params;
-
-		const [error, completedRepDto] = CompletedRepairDTO.CompletedR(req.body);
-
-		if (error) return res.status(422).json({ message: error });
+		const sessionUserId = req.body.sessionUser.id;
 
 		this.repairService
-			.completedRepair(id, completedRepDto!)
+			.completedRepair(id, sessionUserId)
 			.then((data: any) => {
-				return res.status(201).json(data);
+				return res.status(200).json(data);
 			})
 			.catch((error: unknown) => this.handleError(error, res));
 	};
 
 	cancelledRepair = (req: Request, res: Response) => {
 		const { id } = req.params;
+		const sessionUserId = req.body.sessionUser.id;
 
 		this.repairService
-			.cancelledRepair(id)
+			.cancelledRepair(id, sessionUserId)
 			.then((data) => {
 				return res.status(204).json(null);
 			})
